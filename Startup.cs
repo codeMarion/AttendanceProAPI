@@ -1,3 +1,4 @@
+using AttendanceProAPI.Data;
 using AttendanceProAPI.Models;
 using AttendanceProAPI.Services;
 using AttendanceProAPI.Services.Interfaces;
@@ -44,7 +45,9 @@ namespace AttendanceProAPI
                     builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().Build();
                 });
             });
+            services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AttendanceProDB")));
             services.AddScoped<IAuth0Service, Auth0Service>();
+            services.AddScoped<IStudentService, StudentService>();
             services.AddHttpClient<IAuth0Service, Auth0Service>();
             services.AddControllers();
             services.Configure<Auth0Settings>(Configuration);
