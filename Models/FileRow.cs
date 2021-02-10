@@ -11,7 +11,7 @@ namespace AttendanceProAPI.Models
     {
         [Key]
         public int Id { get; set; }
-        [JsonProperty("user")]
+        [JsonProperty("userId")]
         public int UserId { get; set; }
         [JsonProperty("studyLevel")]
         public string StudyLevel { get; set; }
