@@ -19,7 +19,7 @@ namespace AttendanceProAPI.Services
         public IActionResult GetStudent(int studentId)
         {
             List<FileRow> dbQuery = DbContext.Students.Where(x => x.UserId == studentId).ToList();
-            List<StudentPageResponse> student = GetStudentResponse(dbQuery);
+            StudentPageResponse student = GetStudentResponse(dbQuery);
             return new OkObjectResult(student);
         }
 
@@ -53,15 +53,13 @@ namespace AttendanceProAPI.Services
             }
         }
 
-        private List<StudentPageResponse> GetStudentResponse(List<FileRow> dbQuery)
+        private StudentPageResponse GetStudentResponse(List<FileRow> dbQuery)
         {
-            List<StudentPageResponse> response = new List<StudentPageResponse>();
             List<StudentData> studentData = new List<StudentData>();
             foreach (FileRow record in dbQuery)
             {
                 studentData.Add(new StudentData()
                 {
-                    RegStatus = record.RegStatus,
                     CourseYear = record.CourseYear,
                     Attended = record.Attended,
                     Explained = record.Explained,
@@ -72,14 +70,15 @@ namespace AttendanceProAPI.Services
                     LastAttendance = record.LastAttendance
                 });
             }
-            response.Add(new StudentPageResponse()
+            StudentPageResponse response = new StudentPageResponse()
             {
                 UserId = dbQuery.Select(x => x.UserId).FirstOrDefault(),
                 StudyLevel = dbQuery.Select(x => x.StudyLevel).FirstOrDefault(),
                 CourseTitle = dbQuery.Select(x => x.CourseTitle).FirstOrDefault(),
                 CourseCode = dbQuery.Select(x => x.CourseCode).FirstOrDefault(),
+                RegStatus = dbQuery[dbQuery.Count() - 1].RegStatus,
                 StudentData = studentData
-            });
+            };
             return response;
         }
 

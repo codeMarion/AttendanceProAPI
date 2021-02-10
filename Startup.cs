@@ -48,9 +48,13 @@ namespace AttendanceProAPI
             services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AttendanceProDB")));
             services.AddScoped<IAuth0Service, Auth0Service>();
             services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<ISendGridService, SendGridService>();
+            services.AddScoped<IBlobStorageService, BlobStorageService>();
             services.AddHttpClient<IAuth0Service, Auth0Service>();
             services.AddControllers();
             services.Configure<Auth0Settings>(Configuration);
+            services.Configure<SendGridSettings>(Configuration);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AttendancePro API" });

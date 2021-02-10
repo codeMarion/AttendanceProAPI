@@ -11,6 +11,7 @@ namespace AttendanceProAPI.Models
         public string StudyLevel { get; set; }
         public string CourseTitle { get; set; }
         public string CourseCode { get; set; }
+        public string RegStatus { get; set; }
         public List<StudentData> StudentData { get; set; }
     }
 }
