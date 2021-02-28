@@ -9,7 +9,7 @@ namespace AttendanceProAPI.Services.Interfaces
 {
     public interface ISendGridService
     {
-        Task<IActionResult> SendEmail(SendGridEmailRequest email, string folder, string file);
+        Task<IActionResult> SendEmail(SendGridEmailRequest email, string folder);
         Task<IActionResult> ReceiveEmail(InboundEmail email);
         Task<IActionResult> GetEmails(string id);
     }

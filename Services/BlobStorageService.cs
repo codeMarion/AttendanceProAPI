@@ -33,7 +33,7 @@ namespace AttendanceProAPI.Services
             return new OkResult();
         }
 
-        public async Task<IActionResult> GetEmails(string folder)
+        public async Task<List<SendGridEmailRequest>> GetEmails(string folder)
         {
             List<SendGridEmailRequest> emails = new List<SendGridEmailRequest>();
             BlobContinuationToken blobContinuationToken = null;
@@ -44,7 +44,7 @@ namespace AttendanceProAPI.Services
                 await blob.DownloadToStreamAsync(memoryStream);
                 emails.Add(JsonConvert.DeserializeObject<SendGridEmailRequest>(System.Text.Encoding.UTF8.GetString(memoryStream.ToArray())));
             }
-            return new OkObjectResult(emails);
+            return emails;
         }
     }
 }

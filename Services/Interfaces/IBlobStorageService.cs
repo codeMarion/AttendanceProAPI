@@ -10,6 +10,6 @@ namespace AttendanceProAPI.Services.Interfaces
     public interface IBlobStorageService
     {
         Task<IActionResult> AddNewEmailData(SendGridEmailRequest email, string folder, string file);
-        Task<IActionResult> GetEmails(string folder);
+        Task<List<SendGridEmailRequest>> GetEmails(string folder);
     }
 }

@@ -18,7 +18,7 @@ namespace AttendanceProAPI.Controllers
         [HttpPost("send")]
         public async Task<IActionResult> SendEmail([FromBody] SendGridEmailRequest email)
         {
-            await sendGridService.SendEmail(email, email.ToEmail, Guid.NewGuid().ToString());
+            await sendGridService.SendEmail(email, email.ToEmail);
             return new OkResult();
         }
 
