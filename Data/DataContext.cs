@@ -11,5 +11,6 @@ namespace AttendanceProAPI.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<FileRow> Students { get; set; }
+        public DbSet<PersonalDetails> PersonalDetails { get; set; }
     }
 }
