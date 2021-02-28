@@ -24,12 +24,32 @@ namespace AttendanceProAPI.Services
         }
         public async Task<IActionResult> ReceiveEmail(InboundEmail email)
         {
+            string[] endOfEmailStrings = { "\n________________________________\n", "\r\n\r\n", "<div class=\"gmail_quote\">" };
+            foreach(string endOfString in endOfEmailStrings)
+            {
+                if (email.Text.Contains(endOfString))
+                {
+                    email.Text = email.Text.Split(endOfString)[0];
+                    try
+                    {
+                        email.Html = email.Html.Split(endOfString)[0];
+                    }
+                    catch(Exception ex)
+                    {
+
+                    }
+                }
+            }
+            email.Text = email.Text.Replace("\n", "<br>");
+            email.Html = email.Html.Replace("\n", "<br>");
+
             return await blobService.AddNewEmailData(
                         new SendGridEmailRequest()
                         {
                             Content = email.Text,
                             FromEmail = email.From.Split("<")[1].Split(">")[0],
                             FromName = email.From.Split("<")[0],
+                            Date = DateTime.Now,
                             ToEmail = email.To,
                             ToName = email.To,
                             Subject = email.Subject,
@@ -42,6 +62,9 @@ namespace AttendanceProAPI.Services
 
         public async Task<IActionResult> SendEmail(SendGridEmailRequest email, string folder, string file)
         {
+            email.Date = DateTime.Now;
+            email.Content = email.Content.Replace("\n", "<br>");
+            email.HtmlContent = email.HtmlContent.Replace("\n", "<br>");
             await blobService.AddNewEmailData(email, folder, file);
             SendGridMessage message = MailHelper.CreateSingleEmail(
                 new EmailAddress(email.FromEmail, email.FromName),

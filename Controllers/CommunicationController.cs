@@ -1,11 +1,7 @@
 ﻿using AttendanceProAPI.Models;
 using AttendanceProAPI.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AttendanceProAPI.Controllers
@@ -29,7 +25,8 @@ namespace AttendanceProAPI.Controllers
         [HttpPost("receive")]
         public async Task<IActionResult> ReceiveEmail([FromForm] InboundEmail emailData)
         {
-            return await sendGridService.ReceiveEmail(emailData);
+            await sendGridService.ReceiveEmail(emailData);
+            return new OkResult();
         }
 
         [HttpGet("{id}")]
