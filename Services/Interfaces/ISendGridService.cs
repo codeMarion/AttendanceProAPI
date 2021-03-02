@@ -12,5 +12,6 @@ namespace AttendanceProAPI.Services.Interfaces
         Task<IActionResult> SendEmail(SendGridEmailRequest email, string folder);
         Task<IActionResult> ReceiveEmail(InboundEmail email);
         Task<IActionResult> GetEmails(string id);
+        Task<IActionResult> SendRemindersMessages();
     }
 }

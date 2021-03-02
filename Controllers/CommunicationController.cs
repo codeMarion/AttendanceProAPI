@@ -1,5 +1,6 @@
 ﻿using AttendanceProAPI.Models;
 using AttendanceProAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -33,6 +34,12 @@ namespace AttendanceProAPI.Controllers
         public async Task<IActionResult> GetEmails(string id)
         {
             return await sendGridService.GetEmails(id);
+        }
+
+        [HttpPost("reminders")]
+        public async Task<IActionResult> SendRemindersMessages()
+        {
+            return await sendGridService.SendRemindersMessages();
         }
     }
 }
