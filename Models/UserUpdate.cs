@@ -9,4 +9,16 @@ namespace AttendanceProAPI.Models
         [JsonProperty("email")]
         public string Email { get; set; }
     }
+
+    public class UserUpdateWithMetadata : UserUpdate
+    {
+        [JsonProperty("user_metadata")]
+        public Metadata Metadata { get; set; }
+    }
+
+    public class Metadata
+    {
+        [JsonProperty("students")]
+        public string Students { get; set; }
+    }
 }

@@ -40,5 +40,39 @@ namespace AttendanceProAPI.Services
                 return new BadRequestResult();
             }
         }
+
+        public async Task<IActionResult> UpdateUserMetaData(string id, string metadata)
+        {
+            HttpRequestMessage request = new HttpRequestMessage()
+            {
+                RequestUri = new Uri($"https://attendancepro.eu.auth0.com/api/v2/users/{id}"),
+                Method = HttpMethod.Patch,
+                Content = new StringContent(JsonConvert.SerializeObject(new { user_metadata=new { students=metadata } }), Encoding.UTF8, "application/json"),
+            };
+            request.Headers.Add("Authorization", $"Bearer {auth0Settings.Auth0ManagementAPIKey}");
+            HttpResponseMessage response = await client.SendAsync(request);
+            if (response.IsSuccessStatusCode)
+            {
+                return new OkResult();
+            }
+            else
+            {
+                return new BadRequestResult();
+            }
+        }
+
+        public async Task<IActionResult> GetUserMetaData(string id)
+        {
+            HttpRequestMessage request = new HttpRequestMessage()
+            {
+                RequestUri = new Uri($"https://attendancepro.eu.auth0.com/api/v2/users/{id}"),
+                Method = HttpMethod.Get,
+            };
+            request.Headers.Add("Authorization", $"Bearer {auth0Settings.Auth0ManagementAPIKey}");
+            HttpResponseMessage response = await client.SendAsync(request);
+            string jsonString = await response.Content.ReadAsStringAsync();
+            UserUpdateWithMetadata user = JsonConvert.DeserializeObject<UserUpdateWithMetadata>(jsonString);
+            return new OkObjectResult(user);
+        }
     }
 }

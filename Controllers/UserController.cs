@@ -27,5 +27,18 @@ namespace AttendanceProAPI.Controllers
         {
             return await auth0Service.UpdateUserDetails(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, user);
         }
+
+        [HttpPatch("{metadata}")]
+        public async Task<IActionResult> UpdateMetadata(string metadata)
+        {
+            return await auth0Service.UpdateUserMetaData(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, metadata);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetUserMetadata()
+        {
+            return await auth0Service.GetUserMetaData(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        }
     }
 }
