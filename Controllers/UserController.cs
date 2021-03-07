@@ -1,11 +1,7 @@
 ﻿using AttendanceProAPI.Models;
 using AttendanceProAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -31,7 +27,7 @@ namespace AttendanceProAPI.Controllers
         [HttpPatch("{metadata}")]
         public async Task<IActionResult> UpdateMetadata(string metadata)
         {
-            return await auth0Service.UpdateUserMetaData(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, metadata);
+            return await auth0Service.UpdateUserMetaData(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, metadata == "CLEAR" ? "" : metadata);
         }
 
 

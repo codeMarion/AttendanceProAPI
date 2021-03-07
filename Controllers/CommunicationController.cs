@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace AttendanceProAPI.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class CommunicationController : ControllerBase
@@ -16,6 +17,7 @@ namespace AttendanceProAPI.Controllers
         {
             this.sendGridService = sendGridService;
         }
+
         [HttpPost("send")]
         public async Task<IActionResult> SendEmail([FromBody] SendGridEmailRequest email)
         {

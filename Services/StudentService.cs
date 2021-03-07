@@ -97,7 +97,7 @@ namespace AttendanceProAPI.Services
             }
         }
 
-        public IActionResult GetPersistentAbsenteesDataCount()
+        public IActionResult GetPersistentAbsenteesDataCount(double margin)
         {
             int count = 0;
             var students = DbContext.Students.AsEnumerable().GroupBy(x => x.UserId).Select(x => x.ToList());
@@ -111,13 +111,13 @@ namespace AttendanceProAPI.Services
                     teaching += row.Teaching;
                 }
                 float avgAttendance =(float)attended / teaching;
-                if (avgAttendance > 0 && avgAttendance < 0.8)
+                if (avgAttendance > 0 && avgAttendance < margin)
                     count++;
             }
             return new OkObjectResult(count);
         }
 
-        public IActionResult GetPersistentAbsenteesData(int page)
+        public IActionResult GetPersistentAbsenteesData(double margin, int page)
         {
             List<FileRow> notAttendingStudents = new List<FileRow>();
             var students = DbContext.Students.AsEnumerable().GroupBy(x => x.UserId).Select(x => x.ToList());
@@ -195,7 +195,7 @@ namespace AttendanceProAPI.Services
             return new OkObjectResult(notAttendingStudents);
         }
 
-        public IActionResult GetPersistentAbsenteesCountByYear()
+        public IActionResult GetPersistentAbsenteesCountByYear(double margin)
         {
             List<FileRow> persistentAbsentees = new List<FileRow>();
             IEnumerable<List<FileRow>> students = DbContext.Students.AsEnumerable().GroupBy(x => x.UserId).Select(x => x.ToList());
@@ -217,7 +217,7 @@ namespace AttendanceProAPI.Services
                     avgStudent.NonAttended += row.NonAttended;
                 }
                 avgStudent.AttendancePercentage = (float)avgStudent.Attended / avgStudent.Teaching;
-                if (avgStudent.AttendancePercentage > 0 && avgStudent.AttendancePercentage < 0.8)
+                if (avgStudent.AttendancePercentage > 0 && avgStudent.AttendancePercentage < margin)
                     persistentAbsentees.Add(avgStudent);
             }
             List<PersistentAbsenteesByYearResponse> persistentAbsenteesByYear = persistentAbsentees.GroupBy(x => x.CourseYear)
@@ -226,7 +226,7 @@ namespace AttendanceProAPI.Services
                     Year = int.Parse(x.FirstOrDefault().CourseYear),
                     AttendingStudents = x.Count()
                 }).ToList().OrderBy(x => x.Year).ToList();
-            IEnumerable<FileRow> persAbsentees = persistentAbsentees.Where(x => x.AttendancePercentage <= 0.4);
+            IEnumerable<FileRow> persAbsentees = persistentAbsentees.Where(x => x.AttendancePercentage <= (margin - 0.4));
             foreach(FileRow item in persAbsentees)
             {
                 PersistentAbsenteesByYearResponse yearRecord = persistentAbsenteesByYear.Find(x => x.Year == int.Parse(item.CourseYear));
@@ -273,7 +273,7 @@ namespace AttendanceProAPI.Services
             return new OkObjectResult(notAttendingStudentsRes);
         }
 
-        public IActionResult GetPersistentAbsenteesCountByCourse()
+        public IActionResult GetPersistentAbsenteesCountByCourse(double margin)
         {
             List<FileRow> persistentAbsentees = new List<FileRow>();
             IEnumerable<List<FileRow>> students = DbContext.Students.AsEnumerable().GroupBy(x => x.UserId).Select(x => x.ToList());
@@ -295,16 +295,16 @@ namespace AttendanceProAPI.Services
                     avgStudent.NonAttended += row.NonAttended;
                 }
                 avgStudent.AttendancePercentage = (float)avgStudent.Attended / avgStudent.Teaching;
-                if (avgStudent.AttendancePercentage > 0 && avgStudent.AttendancePercentage < 0.8)
+                if (avgStudent.AttendancePercentage > 0 && avgStudent.AttendancePercentage < margin)
                     persistentAbsentees.Add(avgStudent);
             }
-            var persistentAbsenteesByCourse = persistentAbsentees.Where(x => x.AttendancePercentage <= 0.4).GroupBy(x => x.CourseCode)
+            var persistentAbsenteesByCourse = persistentAbsentees.Where(x => x.AttendancePercentage <= (margin - 0.4)).GroupBy(x => x.CourseCode)
                 .Select(x => new
                 {
                     Course = x.FirstOrDefault().CourseCode,
                     Students = x.Count()
                 }).ToList().OrderByDescending(x => x.Students).ToList();
-            return new OkObjectResult(new { Data = persistentAbsenteesByCourse, Total = persistentAbsentees.Where(x => x.AttendancePercentage <= 0.4).Count() });
+            return new OkObjectResult(new { Data = persistentAbsenteesByCourse, Total = persistentAbsentees.Where(x => x.AttendancePercentage <= (margin - 0.4)).Count() });
         }
 
         public IActionResult GetAttendanceDataByPeriod()
@@ -340,6 +340,13 @@ namespace AttendanceProAPI.Services
                 sessions += item.Teaching;
             }
             return new OkObjectResult(new {attended,sessions});
+        }
+
+        public IActionResult GetTrackedStudents(int[] students)
+        {
+            List<FileRow> dbQuery = DbContext.Students.Where(x => students.Contains(x.UserId)).AsEnumerable().GroupBy(x => x.UserId).Select(x => x.FirstOrDefault()).ToList();
+            List<Student> trackedStudents = dbQuery.Select(x => new Student {UserId=x.UserId,StudyLevel=x.StudyLevel,CourseCode=x.CourseCode,CourseTitle=x.CourseTitle }).ToList();
+            return new OkObjectResult(trackedStudents);
         }
 
         private StudentPageResponse GetStudentResponse(List<FileRow> dbQuery)

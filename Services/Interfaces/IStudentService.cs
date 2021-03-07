@@ -13,14 +13,15 @@ namespace AttendanceProAPI.Services.Interfaces
         IActionResult GetStudent(int studentId);
         IActionResult UpdateStudent(PersonalDetails details);
         IActionResult GetStudentsPage(string[] courseCodes, int pageNo, string searchTerm);
-        IActionResult GetPersistentAbsenteesDataCount();
-        IActionResult GetPersistentAbsenteesData(int page);
-        IActionResult GetPersistentAbsenteesCountByYear();
-        IActionResult GetPersistentAbsenteesCountByCourse();
+        IActionResult GetPersistentAbsenteesDataCount(double margin);
+        IActionResult GetPersistentAbsenteesData(double margin, int page);
+        IActionResult GetPersistentAbsenteesCountByYear(double margin);
+        IActionResult GetPersistentAbsenteesCountByCourse(double margin);
         IActionResult GetNonAttendingStudentsCount();
         IActionResult GetNonAttendingStudents(int page);
         IActionResult GetNonAttendingCountByYear();
         IActionResult GetAttendanceDataByPeriod();
         IActionResult GetAverageAttendance();
+        IActionResult GetTrackedStudents(int[] students);
     }
 }

@@ -2,8 +2,6 @@
 using AttendanceProAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AttendanceProAPI.Controllers
 {
@@ -53,44 +51,44 @@ namespace AttendanceProAPI.Controllers
         {
             return studentService.GetStudentsPage(courseCodes, page, searchTerm);
         }
-        [AllowAnonymous]
-        [HttpGet("persistentAbsence")]
-        public IActionResult GetPersistentAbsenteesDataCount()
+
+        [HttpGet("persistentAbsenceCount/{margin}")]
+        public IActionResult GetPersistentAbsenteesDataCount(double margin)
         {
-            return studentService.GetPersistentAbsenteesDataCount();
+            return studentService.GetPersistentAbsenteesDataCount(margin);
         }
-        [AllowAnonymous]
-        [HttpGet("persistentAbsence/{page}")]
-        public IActionResult GetPersistentAbsenteesData(int page)
+
+        [HttpGet("persistentAbsence/{margin}/{page}")]
+        public IActionResult GetPersistentAbsenteesData(double margin, int page)
         {
-            return studentService.GetPersistentAbsenteesData(page);
+            return studentService.GetPersistentAbsenteesData(margin, page);
         }
-        [AllowAnonymous]
-        [HttpGet("persistentAbsenteesCountByYear")]
-        public IActionResult GetPersistentAbsenteesCountByYear()
+
+        [HttpGet("persistentAbsenteesCountByYear/{margin}")]
+        public IActionResult GetPersistentAbsenteesCountByYear(double margin)
         {
-            return studentService.GetPersistentAbsenteesCountByYear();
+            return studentService.GetPersistentAbsenteesCountByYear(margin);
         }
-        [AllowAnonymous]
-        [HttpGet("persistentAbsenteesCountByCourse")]
-        public IActionResult GetPersistentAbsenteesCountByCourse()
+
+        [HttpGet("persistentAbsenteesCountByCourse/{margin}")]
+        public IActionResult GetPersistentAbsenteesCountByCourse(double margin)
         {
-            return studentService.GetPersistentAbsenteesCountByCourse();
+            return studentService.GetPersistentAbsenteesCountByCourse(margin);
         }
-        [AllowAnonymous]
+
         [HttpGet("nonAttendingCount")]
         public IActionResult GetNonAttendingStudentsCount()
         {
             return studentService.GetNonAttendingStudentsCount();
         }
-        [AllowAnonymous]
+
         [HttpGet("nonAttendingStudents/{page}")]
         public IActionResult GetNonAttendingStudents(int page)
         {
             return studentService.GetNonAttendingStudents(page);
         }
 
-        [AllowAnonymous]
+
         [HttpGet("nonAttendingStudentsByYear")]
         public IActionResult GetNonAttendingStudentsByYear()
         {
@@ -107,6 +105,12 @@ namespace AttendanceProAPI.Controllers
         public IActionResult GetAverageAttendance()
         {
             return studentService.GetAverageAttendance();
+        }
+
+        [HttpPost("getTrackedStudents")]
+        public IActionResult GetTrackedStudents([FromBody] int [] students)
+        {
+            return studentService.GetTrackedStudents(students);
         }
     }
 }

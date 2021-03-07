@@ -1,9 +1,11 @@
 ﻿using AttendanceProAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace AttendanceProAPI.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class CourseController : ControllerBase
