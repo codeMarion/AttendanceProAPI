@@ -9,8 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
+using System.IO;
 using System.Security.Claims;
 
 namespace AttendanceProAPI
@@ -45,6 +48,7 @@ namespace AttendanceProAPI
                     builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().Build();
                 });
             });
+            //Dependency Injection
             services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AttendanceProDB")));
             services.AddScoped<IAuth0Service, Auth0Service>();
             services.AddScoped<IStudentService, StudentService>();
@@ -58,6 +62,33 @@ namespace AttendanceProAPI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AttendancePro API" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme for Attendance Platform. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+
+                        },
+                        new List<string>()
+                    }
+                });
+                var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "AttendanceProAPI.xml");
+                c.IncludeXmlComments(filePath);
             });
         }
 

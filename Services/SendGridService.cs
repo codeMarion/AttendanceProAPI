@@ -25,6 +25,10 @@ namespace AttendanceProAPI.Services
             this.sendGridSettings = sendGridSettings.Value;
             sendGridClient = new SendGridClient(this.sendGridSettings.SendGridAPIKey);
         }
+        /// <summary>
+        /// This method is used for inbound email processing. 
+        /// It adds the incoming email to a corresponding blob storage.
+        /// </summary>
         public async Task<IActionResult> ReceiveEmail(InboundEmail email)
         {
             List<SendGridEmailRequest> emails = await blobService.GetEmails(email.From.Split("<")[1].Split(">")[0]);
@@ -50,7 +54,10 @@ namespace AttendanceProAPI.Services
                 (emails.Count() + 1).ToString()
             );
         }
-
+        /// <summary>
+        /// This method is used to send an email using the Twilio SendGrid service 
+        /// and the email that is being sent is recorded in the blob storage.
+        /// </summary>
         public async Task<IActionResult> SendEmail(SendGridEmailRequest email, string folder)
         {
             List<SendGridEmailRequest> emails = await blobService.GetEmails(email.ToEmail);
@@ -68,12 +75,17 @@ namespace AttendanceProAPI.Services
             await sendGridClient.SendEmailAsync(message);
             return new OkResult();
         }
-
+        /// <summary>
+        /// This method is used to retrieve emails from blob storage that belong to a given email address
+        /// </summary>
         public async Task<IActionResult> GetEmails(string id)
         {
             return new OkObjectResult(await blobService.GetEmails(id));
         }
-
+        /// <summary>
+        /// This method is used to send automatic email reminders to risk students. 
+        /// The email is stored in the blob storage as well.
+        /// </summary>
         public async Task<IActionResult> SendRemindersMessages()
         {
             List<FileRow> studentsToBeEmailed = new List<FileRow>();

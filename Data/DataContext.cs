@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace AttendanceProAPI.Data
 {
+    /// <summary>
+    /// This class is used as a migration layer between C# domain classes and database through Entity Framework Core.
+    /// </summary>
     public class DataContext : DbContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }

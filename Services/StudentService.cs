@@ -15,6 +15,9 @@ namespace AttendanceProAPI.Services
         {
             this.DbContext = DbContext;
         }
+        /// <summary>
+        /// This method is used to retrieve a student object based on the student id.
+        /// </summary>
         public IActionResult GetStudent(int studentId)
         {
             List<FileRow> dbQuery = DbContext.Students.Where(x => x.UserId == studentId).ToList();
@@ -27,7 +30,9 @@ namespace AttendanceProAPI.Services
             }
             return new OkObjectResult(student);
         }
-
+        /// <summary>
+        /// This method is used to update personal details of a given student.
+        /// </summary>
         public IActionResult UpdateStudent(PersonalDetails details)
         {
             PersonalDetails studentInformation = DbContext.PersonalDetails.Where(x => x.UserId == details.UserId).FirstOrDefault();
@@ -48,7 +53,9 @@ namespace AttendanceProAPI.Services
             DbContext.SaveChanges();
             return new OkResult();
         }
-
+        /// <summary>
+        /// This method is used to get the number of students in the database.
+        /// </summary>
         public IActionResult GetStudentCount(string[] courseCodes, string searchTerm)
         {
             int count;
@@ -69,7 +76,9 @@ namespace AttendanceProAPI.Services
                 return new OkObjectResult(count);
             }
         }
-
+        /// <summary>
+        /// This method is used to retrieve the data about students for a given page.
+        /// </summary>
         public IActionResult GetStudentsPage(string[] courseCodes, int pageNo, string searchTerm)
         {
             IEnumerable<List<FileRow>> dbQuery;
@@ -96,7 +105,9 @@ namespace AttendanceProAPI.Services
                 return new OkObjectResult(response);
             }
         }
-
+        /// <summary>
+        /// This method is used retrieve the number of persistent absentees by dynamic risk level margin.
+        /// </summary>
         public IActionResult GetPersistentAbsenteesDataCount(double margin)
         {
             int count = 0;
@@ -116,11 +127,14 @@ namespace AttendanceProAPI.Services
             }
             return new OkObjectResult(count);
         }
-
+        /// <summary>
+        /// This method is used to retrieve persistent absentees data by dynamic risk level margin for a given page.
+        /// </summary>
         public IActionResult GetPersistentAbsenteesData(double margin, int page)
         {
             List<FileRow> notAttendingStudents = new List<FileRow>();
             var students = DbContext.Students.AsEnumerable().GroupBy(x => x.UserId).Select(x => x.ToList());
+            //Remodelling data to a suitable format.
             foreach (var student in students)
             {
                 FileRow avgStudent = new FileRow();
@@ -148,7 +162,9 @@ namespace AttendanceProAPI.Services
             notAttendingStudents = notAttendingStudents.Skip((page - 1) * 5).Take(5).ToList();
             return new OkObjectResult(notAttendingStudents);
         }
-
+        /// <summary>
+        /// This method is used to retreive the number of not attending students.
+        /// </summary>
         public IActionResult GetNonAttendingStudentsCount()
         {
             int count = 0;
@@ -165,11 +181,14 @@ namespace AttendanceProAPI.Services
             }
             return new OkObjectResult(count);
         }
-
+        /// <summary>
+        /// This method is used to retrieve not attending students for a given page.
+        /// </summary>
         public IActionResult GetNonAttendingStudents(int page)
         {
             List<FileRow> notAttendingStudents = new List<FileRow>();
             var students = DbContext.Students.AsEnumerable().GroupBy(x => x.UserId).Select(x => x.ToList());
+            //Remodelling data to a suitable format
             foreach (var student in students)
             {
                 FileRow avgStudent = new FileRow();
@@ -194,11 +213,14 @@ namespace AttendanceProAPI.Services
             notAttendingStudents = notAttendingStudents.Skip((page - 1) * 5).Take(5).ToList();
             return new OkObjectResult(notAttendingStudents);
         }
-
+        /// <summary>
+        /// This method is used retreive the number of persistent absentees by year with a dynamic risk level margin.
+        /// </summary>
         public IActionResult GetPersistentAbsenteesCountByYear(double margin)
         {
             List<FileRow> persistentAbsentees = new List<FileRow>();
             IEnumerable<List<FileRow>> students = DbContext.Students.AsEnumerable().GroupBy(x => x.UserId).Select(x => x.ToList());
+            //Remodelling data to a suitable format
             foreach (var student in students)
             {
                 FileRow avgStudent = new FileRow();
@@ -236,11 +258,14 @@ namespace AttendanceProAPI.Services
 
             return new OkObjectResult(persistentAbsenteesByYear);
         }
-
+        /// <summary>
+        /// This method is used to retrieve the number of not attending students by year 
+        /// </summary>
         public IActionResult GetNonAttendingCountByYear()
         {
             List<FileRow> notAttendingStudents = new List<FileRow>();
             var students = DbContext.Students.AsEnumerable().GroupBy(x => x.UserId).Select(x => x.ToList());
+            //Remodelling data
             foreach (var student in students)
             {
                 FileRow avgStudent = new FileRow();
@@ -265,18 +290,21 @@ namespace AttendanceProAPI.Services
             List<dynamic> res = new List<dynamic>();
             notAttendingStudents = notAttendingStudents.Where(x => x.AttendancePercentage == 0).ToList();
             var notAttendingStudentsRes = notAttendingStudents.GroupBy(x => x.CourseYear)
-                .Select(x => new 
+                .Select(x => new StudentNonAttendingResponse
                 {
                     Year = int.Parse(x.FirstOrDefault().CourseYear),
                     NotAttendingStudents = x.Count()
                 }).ToList().OrderBy(x => x.Year).ToList();
             return new OkObjectResult(notAttendingStudentsRes);
         }
-
+        /// <summary>
+        /// This method is used to retrieve the persistent absentees count by course with a dynamic risk level margin.
+        /// </summary>
         public IActionResult GetPersistentAbsenteesCountByCourse(double margin)
         {
             List<FileRow> persistentAbsentees = new List<FileRow>();
             IEnumerable<List<FileRow>> students = DbContext.Students.AsEnumerable().GroupBy(x => x.UserId).Select(x => x.ToList());
+            //Remodelling data
             foreach (var student in students)
             {
                 FileRow avgStudent = new FileRow();
@@ -299,14 +327,16 @@ namespace AttendanceProAPI.Services
                     persistentAbsentees.Add(avgStudent);
             }
             var persistentAbsenteesByCourse = persistentAbsentees.Where(x => x.AttendancePercentage <= (margin - 0.4)).GroupBy(x => x.CourseCode)
-                .Select(x => new
+                .Select(x => new PersistentAbsenteesByCourse
                 {
                     Course = x.FirstOrDefault().CourseCode,
                     Students = x.Count()
                 }).ToList().OrderByDescending(x => x.Students).ToList();
             return new OkObjectResult(new { Data = persistentAbsenteesByCourse, Total = persistentAbsentees.Where(x => x.AttendancePercentage <= (margin - 0.4)).Count() });
         }
-
+        /// <summary>
+        /// This method is used to retrieve attendance data by periods that a student has attended.
+        /// </summary>
         public IActionResult GetAttendanceDataByPeriod()
         {
             List<AbsenceStarting> response = new List<AbsenceStarting>();
@@ -330,7 +360,9 @@ namespace AttendanceProAPI.Services
             }
             return new OkObjectResult(response);
         }
-
+        /// <summary>
+        /// This method is used retrieve the average attendance
+        /// </summary>
         public IActionResult GetAverageAttendance()
         {
             int attended = 0, sessions = 0;
@@ -339,16 +371,20 @@ namespace AttendanceProAPI.Services
                 attended += item.Attended;
                 sessions += item.Teaching;
             }
-            return new OkObjectResult(new {attended,sessions});
+            return new OkObjectResult(new AverageAttendance {Attended=attended,Sessions=sessions});
         }
-
+        /// <summary>
+        /// This method is used to retrieve the students ids that the logged in user is tracking.
+        /// </summary>
         public IActionResult GetTrackedStudents(int[] students)
         {
             List<FileRow> dbQuery = DbContext.Students.Where(x => students.Contains(x.UserId)).AsEnumerable().GroupBy(x => x.UserId).Select(x => x.FirstOrDefault()).ToList();
             List<Student> trackedStudents = dbQuery.Select(x => new Student {UserId=x.UserId,StudyLevel=x.StudyLevel,CourseCode=x.CourseCode,CourseTitle=x.CourseTitle }).ToList();
             return new OkObjectResult(trackedStudents);
         }
-
+        /// <summary>
+        /// This private method is used remodel data received from the database
+        /// </summary>
         private StudentPageResponse GetStudentResponse(List<FileRow> dbQuery)
         {
             List<StudentData> studentData = new List<StudentData>();
@@ -377,7 +413,9 @@ namespace AttendanceProAPI.Services
             };
             return response;
         }
-
+        /// <summary>
+        /// This private method is used to prepare students page results that is received from the database.
+        /// </summary>
         private List<Student> GetStudentsPageResponse(IEnumerable<List<FileRow>> dbQuery)
         {
             List<Student> response = new List<Student>();

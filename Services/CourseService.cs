@@ -16,7 +16,9 @@ namespace AttendanceProAPI.Services
         {
             this.context = context;
         }
-
+        /// <summary>
+        /// This method is used to get course code and title from all courses.
+        /// </summary>
         public async Task<IActionResult> GetAllCourses()
         {
             List<Course> courses = new List<Course>();
@@ -32,13 +34,17 @@ namespace AttendanceProAPI.Services
             return new OkObjectResult(courses);
         }
 
-
+        /// <summary>
+        /// This method is used to get information about a particular course.
+        /// </summary>
         public async Task<IActionResult> GetCourse(string courseCode)
         {
             FileRow course = context.Students.Where(x => x.CourseCode == courseCode).FirstOrDefault();
             return new OkObjectResult(course);
         }
-
+        /// <summary>
+        /// This method is used to get course absence reasons data.
+        /// </summary>
         public async Task<IActionResult> GetCourseAbsenceReasonData(string[] courseCodes)
         {
             List<AbsenceReasonByYear> AbsencesByYear = new List<AbsenceReasonByYear>();
@@ -52,6 +58,7 @@ namespace AttendanceProAPI.Services
             {
                 courses = context.Students.Where(x => courseCodes.Contains(x.CourseCode)).ToList();
             }
+            //Remodelling data for charts in the front-end
             foreach(FileRow course in courses)
             {
                 AbsenceReasonByYear year = AbsencesByYear.Where(x => x.Year == int.Parse(course.CourseYear)).Select(x => x).FirstOrDefault();
@@ -86,11 +93,15 @@ namespace AttendanceProAPI.Services
             };
             return new OkObjectResult(absenceReasonResponse);
         }
+        /// <summary>
+        /// This method is used to get attedendance data by course
+        /// </summary>
         public async Task<IActionResult> GetAttendanceDataByCourse(string[] courseCodes)
         {
             List<AttendanceByPeriod> AttendanceByPeriodResponse = new List<AttendanceByPeriod>();
             List<FileRow> courses = context.Students.Where(x => courseCodes.Contains(x.CourseCode)).ToList();
             IEnumerable<IEnumerable<FileRow>> GroupedRows = courses.GroupBy(x => x.UserId).Select(x => x.Select(x => x));
+            //Remodelling data to suitable format
             foreach(IEnumerable<FileRow> Row in GroupedRows)
             {
                 try
@@ -124,12 +135,15 @@ namespace AttendanceProAPI.Services
             }
             return new OkObjectResult(AttendanceByPeriodResponse);
         }
-
+        /// <summary>
+        /// This method is used to get attedendance data by teaching sessions
+        /// </summary>
         public async Task<IActionResult> AttendanceDataByTeachingSessions(string[] courseCodes)
         {
             List<CourseAttendedByTeachingResponse> attendanceData = new List<CourseAttendedByTeachingResponse>();
             List<FileRow> dbData = context.Students.Where(x => courseCodes.Contains(x.CourseCode)).ToList();
             IEnumerable<List<FileRow>> students = dbData.AsEnumerable().GroupBy(x => x.UserId).Select(x => new List<FileRow>(x));
+            //Remodelling data to a suitable format
             foreach(List<FileRow> student in students)
             {
                 CourseAttendedByTeachingResponse course = attendanceData.Where(x => x.Course == student.FirstOrDefault().CourseCode).FirstOrDefault();

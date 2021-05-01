@@ -20,7 +20,9 @@ namespace AttendanceProAPI.Services
             this.client = client;
             this.auth0Settings = auth0Settings.Value;
         }
-
+        /// <summary>
+        /// This method is used to update the user contact information in Auth0
+        /// </summary>
         public async Task<IActionResult> UpdateUserDetails(string id, UserUpdate user)
         {
             HttpRequestMessage request = new HttpRequestMessage()
@@ -40,7 +42,9 @@ namespace AttendanceProAPI.Services
                 return new BadRequestResult();
             }
         }
-
+        /// <summary>
+        /// This method is used to update the user metadata in Auth0
+        /// </summary>
         public async Task<IActionResult> UpdateUserMetaData(string id, string metadata)
         {
             HttpRequestMessage request = new HttpRequestMessage()
@@ -60,7 +64,9 @@ namespace AttendanceProAPI.Services
                 return new BadRequestResult();
             }
         }
-
+        /// <summary>
+        /// This method is used to retrieve user metadata from Auth0
+        /// </summary>
         public async Task<IActionResult> GetUserMetaData(string id)
         {
             HttpRequestMessage request = new HttpRequestMessage()

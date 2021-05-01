@@ -26,13 +26,18 @@ namespace AttendanceProAPI.Services
             blobClient = storageAccount.CreateCloudBlobClient();
             blobContainer = blobClient.GetContainerReference(this.settings.BlobContainer);
         }
+        /// <summary>
+        /// This method is used to add new emails to the linked student container in blob storage.
+        /// </summary>
         public async Task<IActionResult> AddNewEmailData(SendGridEmailRequest email, string folder, string file)
         {
             CloudBlockBlob blob = blobContainer.GetBlockBlobReference($"{folder}/{file}");
             await blob.UploadTextAsync(JsonConvert.SerializeObject(email));
             return new OkResult();
         }
-
+        /// <summary>
+        /// This method is used to retrieve emails from the linked student container (blob storage).
+        /// </summary>
         public async Task<List<SendGridEmailRequest>> GetEmails(string folder)
         {
             List<SendGridEmailRequest> emails = new List<SendGridEmailRequest>();
