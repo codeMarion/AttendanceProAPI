@@ -1,0 +1,407 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AttendanceProAPI</name>
+    </assembly>
+    <members>
+        <member name="M:AttendanceProAPI.Controllers.CommunicationController.SendEmail(AttendanceProAPI.Models.SendGridEmailRequest)">
+            <summary>
+            This endpoint is used to send an email.
+            </summary>
+            <param name="email">The email content with relevant headers</param>
+            <response code="200">Email sent successfully</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.CommunicationController.ReceiveEmail(AttendanceProAPI.Models.InboundEmail)">
+            <summary>
+            This endpoint is used as a webhook for inbound emails from Twilio SendGrid
+            </summary>
+            <param name="emailData">The email content with relevant SendGrid headers</param>
+            <response code="200">Email receieved successfully</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.CommunicationController.GetEmails(System.String)">
+            <summary>
+            Gets all emails that are linked to a given student
+            </summary>
+            <param name="id">email address of a student</param>
+            <returns>Retrieves all emails that are linked to a given student</returns>
+            <response code="200">Returns all emails linked to a gives student</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.CommunicationController.SendRemindersMessages">
+            <summary>
+            HttpTrigger to send automatic reminder emails to risk students.
+            </summary>
+            <response code="200">Sends email reminders to risk students</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.CourseController.GetAllCourses">
+            <summary>
+            Retrieves all courses
+            </summary>
+            <returns>List of Courses</returns>
+            <response code="200">Returns all courses</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.CourseController.GetCourse(System.String)">
+            <summary>
+            Retrieves a course
+            </summary>
+            <param name="courseCode">Course code</param>
+            <returns>Returns a course</returns>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.CourseController.GetCourseAbsenceReasonData(System.String[])">
+            <summary>
+            Retrieves Absence Reason data
+            </summary>
+            <param name="courseCodes">String array of course codes</param>
+            <returns></returns>
+            <response code="200">Returns absence reason data</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.CourseController.AttendanceDataByCourse(System.String[])">
+            <summary>
+            Retrieves attendance data by courses
+            </summary>
+            <param name="courseCodes">String array of course code</param>
+            <returns>Returns attendance data by courses</returns>
+            <response code="200">Returns attendance data by courses</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.CourseController.AttendanceDataByTeachingSessions(System.String[])">
+            <summary>
+            Retrieves the attendance data with associated teaching sessions
+            </summary>
+            <param name="courseCodes">String array of course codes</param>
+            <returns>Retrieves the attendance data with associated teaching sessions</returns>
+            <response code="200">Returns the attendance data with associated teaching sessions</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.GetStudentCountWithoutFiltering(System.String[])">
+            <summary>
+            Retrieves the number of students
+            </summary>
+            <param name="courseCodes">String array of course codes</param>
+            <returns>Returns the number of students</returns>
+            <response code="200">Returns the number of students</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.GetStudentCountWithFiltering(System.String[],System.String)">
+            <summary>
+            Retrieves the number of students with filtering options
+            </summary>
+            <param name="courseCodes">String array of course codes</param>
+            <param name="searchTerm">Student id keyword</param>
+            <returns>Returns the number of students with filtering options</returns>
+            <response code="200">Returns the number of students with filtering options</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.GetStudent(System.Int32)">
+            <summary>
+            Retrieves a student object
+            </summary>
+            <param name="id">Student id</param>
+            <returns>Returns a student object</returns>
+            <response code="200">Returns a student object</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.UpdateStudent(AttendanceProAPI.Models.PersonalDetails)">
+            <summary>
+            Updates student personal detils
+            </summary>
+            <param name="details">Updated personal details object</param>
+            <returns>Returns updated student object</returns>
+            <response code="200">Student personal details updated successfully</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.GetStudentsPageWithoutFiltering(System.String[],System.Int32)">
+            <summary>
+            Retrieve array of students objects for a given page
+            </summary>
+            <param name="courseCodes">String array of course codes</param>
+            <returns>Returns array of students objects for a given page</returns>
+            <response code="200">Student personal details updated successfully</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.GetStudentsPageWithFiltering(System.String[],System.Int32,System.String)">
+            <summary>
+            Retrieve array of students objects for a given page with filtering options
+            </summary>
+            <param name="courseCodes">String array of course codes</param>
+            <param name="searchTerm">Student id keyword</param>
+            <returns>Returns array of students objects for a given page with filtering options</returns>
+            <response code="200">Student personal details updated successfully</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.GetPersistentAbsenteesDataCount(System.Double)">
+            <summary>
+            Retrieve the number of persistent absentees 
+            </summary>
+            <param name="margin">Risk student percentage</param>
+            <returns>Returns the number of persistent absentees </returns>
+            <response code="200">The number of persistent absentees</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.GetPersistentAbsenteesData(System.Double,System.Int32)">
+            <summary>
+            Retrieve persistent absentees by page
+            </summary>
+            <param name="margin">Risk student percentage</param>
+            <param name="page">Page number</param>
+            <returns>Returns persistent absentees by page</returns>
+            <response code="200">Persistent absentees by page</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.GetPersistentAbsenteesCountByYear(System.Double)">
+            <summary>
+            Retrieve the number of persistent absentees by year
+            </summary>
+            <param name="margin">Risk student percentage</param>
+            <returns>Returns the number of persistent absentees by year</returns>
+            <response code="200">The number of persistent absentees by year</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.GetPersistentAbsenteesCountByCourse(System.Double)">
+            <summary>
+            Retrieve the number of persistent absentees by course
+            </summary>
+            <param name="margin">Risk student percentage</param>
+            <returns>Returns the number of persistent absentees by course</returns>
+            <response code="200">The number of persistent absentees by course</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.GetNonAttendingStudentsCount">
+            <summary>
+            Retrieve the number of not attending students 
+            </summary>
+            <returns>Returns the number of not attending students</returns>
+            <response code="200">The number of not attending students</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.GetNonAttendingStudents(System.Int32)">
+            <summary>
+            Retrieve not attending students by page
+            </summary>
+            <param name="page">Page number</param>
+            <returns>Returns not attending students by page</returns>
+            <response code="200">Retrieve not attending students by page</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.GetNonAttendingStudentsByYear">
+            <summary>
+            Retrieve not attending students by year
+            </summary>
+            <returns>Returns not attending students by year</returns>
+            <response code="200">Retrieve not attending students by year</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.GetAttendanceDataByPeriod">
+            <summary>
+            Retrieve attendance data by period
+            </summary>
+            <returns>Returns attendance data by period</returns>
+            <response code="200">Retrieve attendance data by period</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.GetAverageAttendance">
+            <summary>
+            Retrieve average attendance
+            </summary>
+            <returns>Returns average attendance</returns>
+            <response code="200">Retrieve average attendance</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.StudentController.GetTrackedStudents(System.Int32[])">
+            <summary>
+            Retrieve tracked students 
+            </summary>
+            <returns>Returns tracked students</returns>
+            <response code="200">Retrieve tracked students</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.UserController.UpdateDetails(AttendanceProAPI.Models.UserUpdate)">
+            <summary>
+            Updates User Details
+            </summary>
+            <param name="user">Updated user object</param>
+            <returns>Updated User Object</returns>
+            <response code="200">Returns the updated user object</response>
+            <response code="400">Unauthorised result</response>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.UserController.UpdateMetadata(System.String)">
+            <summary>
+            Returns the updated user metadata
+            </summary>
+            <param name="metadata">New metadata</param>
+            <response code="200">Returns the user metadata</response>
+            <response code="400">Unauthorised result</response>
+            <returns></returns>
+        </member>
+        <member name="M:AttendanceProAPI.Controllers.UserController.GetUserMetadata">
+            <summary>
+            Retrieves user metadata from the identity provider
+            </summary>
+            <response code="200">Returns the user metadata</response>
+            <response code="400">Unauthorised result</response>
+            <returns>User metadata</returns>
+        </member>
+        <member name="T:AttendanceProAPI.Data.DataContext">
+            <summary>
+            This class is used as a migration layer between C# domain classes and database through Entity Framework Core.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.Auth0Service.UpdateUserDetails(System.String,AttendanceProAPI.Models.UserUpdate)">
+            <summary>
+            This method is used to update the user contact information in Auth0
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.Auth0Service.UpdateUserMetaData(System.String,System.String)">
+            <summary>
+            This method is used to update the user metadata in Auth0
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.Auth0Service.GetUserMetaData(System.String)">
+            <summary>
+            This method is used to retrieve user metadata from Auth0
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.BlobStorageService.AddNewEmailData(AttendanceProAPI.Models.SendGridEmailRequest,System.String,System.String)">
+            <summary>
+            This method is used to add new emails to the linked student container in blob storage.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.BlobStorageService.GetEmails(System.String)">
+            <summary>
+            This method is used to retrieve emails from the linked student container (blob storage).
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.CourseService.GetAllCourses">
+            <summary>
+            This method is used to get course code and title from all courses.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.CourseService.GetCourse(System.String)">
+            <summary>
+            This method is used to get information about a particular course.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.CourseService.GetCourseAbsenceReasonData(System.String[])">
+            <summary>
+            This method is used to get course absence reasons data.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.CourseService.GetAttendanceDataByCourse(System.String[])">
+            <summary>
+            This method is used to get attedendance data by course
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.CourseService.AttendanceDataByTeachingSessions(System.String[])">
+            <summary>
+            This method is used to get attedendance data by teaching sessions
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.SendGridService.ReceiveEmail(AttendanceProAPI.Models.InboundEmail)">
+            <summary>
+            This method is used for inbound email processing. 
+            It adds the incoming email to a corresponding blob storage.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.SendGridService.SendEmail(AttendanceProAPI.Models.SendGridEmailRequest,System.String)">
+            <summary>
+            This method is used to send an email using the Twilio SendGrid service 
+            and the email that is being sent is recorded in the blob storage.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.SendGridService.GetEmails(System.String)">
+            <summary>
+            This method is used to retrieve emails from blob storage that belong to a given email address
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.SendGridService.SendRemindersMessages">
+            <summary>
+            This method is used to send automatic email reminders to risk students. 
+            The email is stored in the blob storage as well.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.GetStudent(System.Int32)">
+            <summary>
+            This method is used to retrieve a student object based on the student id.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.UpdateStudent(AttendanceProAPI.Models.PersonalDetails)">
+            <summary>
+            This method is used to update personal details of a given student.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.GetStudentCount(System.String[],System.String)">
+            <summary>
+            This method is used to get the number of students in the database.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.GetStudentsPage(System.String[],System.Int32,System.String)">
+            <summary>
+            This method is used to retrieve the data about students for a given page.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.GetPersistentAbsenteesDataCount(System.Double)">
+            <summary>
+            This method is used retrieve the number of persistent absentees by dynamic risk level margin.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.GetPersistentAbsenteesData(System.Double,System.Int32)">
+            <summary>
+            This method is used to retrieve persistent absentees data by dynamic risk level margin for a given page.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.GetNonAttendingStudentsCount">
+            <summary>
+            This method is used to retreive the number of not attending students.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.GetNonAttendingStudents(System.Int32)">
+            <summary>
+            This method is used to retrieve not attending students for a given page.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.GetPersistentAbsenteesCountByYear(System.Double)">
+            <summary>
+            This method is used retreive the number of persistent absentees by year with a dynamic risk level margin.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.GetNonAttendingCountByYear">
+            <summary>
+            This method is used to retrieve the number of not attending students by year 
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.GetPersistentAbsenteesCountByCourse(System.Double)">
+            <summary>
+            This method is used to retrieve the persistent absentees count by course with a dynamic risk level margin.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.GetAttendanceDataByPeriod">
+            <summary>
+            This method is used to retrieve attendance data by periods that a student has attended.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.GetAverageAttendance">
+            <summary>
+            This method is used retrieve the average attendance
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.GetTrackedStudents(System.Int32[])">
+            <summary>
+            This method is used to retrieve the students ids that the logged in user is tracking.
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.GetStudentResponse(System.Collections.Generic.List{AttendanceProAPI.Models.FileRow})">
+            <summary>
+            This private method is used remodel data received from the database
+            </summary>
+        </member>
+        <member name="M:AttendanceProAPI.Services.StudentService.GetStudentsPageResponse(System.Collections.Generic.IEnumerable{System.Collections.Generic.List{AttendanceProAPI.Models.FileRow}})">
+            <summary>
+            This private method is used to prepare students page results that is received from the database.
+            </summary>
+        </member>
+    </members>
+</doc>
