@@ -5,7 +5,7 @@ This is a 1-year long project built during my final year at The University of Su
 ## Project Status:
 
 
-This project is currently in Development (MVP) phase. 
+This project is deployed. 
 
 ## Installation and Setup Instructions
 
