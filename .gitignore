@@ -339,3 +339,6 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /Migrations
+Properties/ServiceDependencies/AttendanceProAPIProd - Web Deploy/profile.arm.json
+appsettings.Development.json
+appsettings.Development.json

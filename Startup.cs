@@ -49,7 +49,7 @@ namespace AttendanceProAPI
                 });
             });
             //Dependency Injection
-            services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AttendanceProDB")));
+            services.AddDbContext<DataContext>(x => x.UseNpgsql(Configuration.GetConnectionString("AttendanceProDB")));
             services.AddScoped<IAuth0Service, Auth0Service>();
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<ICourseService, CourseService>();
